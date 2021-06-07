@@ -1,0 +1,7 @@
+# Jetbrains IntelliJ IDEA
+.idea
+*.iml
+
+# Python 3.7 Virtual Environment (Interpreter)
+venv
+__pycache__/
