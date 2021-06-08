@@ -2,7 +2,7 @@ from _datetime import datetime
 
 
 def get_time_based_greeting():
-    """Return appropriate greeting for the current time for greetings."""
+    """Return appropriate greeting for the current time."""
     return _get_message_for_current_time()
 
 
