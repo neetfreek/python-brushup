@@ -10,3 +10,6 @@ def fizz_buzz():
             print("buzz")
         else:
             print(i)
+
+
+fizz_buzz()
