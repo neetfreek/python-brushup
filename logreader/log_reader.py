@@ -75,12 +75,10 @@ def _call_check_logs_if_have_permission(file_to_read):
 
 def _check_logs_for_issues(file_to_read):
     # Find lines in log file matching issue keywords
+    issues_found = {}
+    logs_copy_made = False
+    regex = re.compile(r"error|failed|warning", re.IGNORECASE)
     with open(file_to_read, "r") as file:
-        count_issue_found = 0
-        issues_found = []
-        logs_copy_made = False
-        regex = re.compile(r"error|failed|warning", re.IGNORECASE)
-
         for i, line in enumerate(file):
             cols = [col.strip() for col in line.split(":") if col]
             for col in cols:
@@ -93,11 +91,20 @@ def _check_logs_for_issues(file_to_read):
                         print(f"Issues found in {file_to_read.name}:\n"
                               f"See {logs_copy_file} directory for logs copy\n"
                               f"See {logs_issues_file} directory for issues")
-                        if col not in issues_found:
-                            issues_found.append(col)
-                            print(f"Adding {col}")
-                            _write_log_line(logs_issues_file, i, col)
-                            count_issue_found += 1
+                    if col not in issues_found:
+                        issues_found.update({col: 1})
+                    else:
+                        issues_found[col] += 1
+    file.close()
+    if issues_found:
+        write_log_file_issues(logs_issues_file, issues_found)
+
+
+def write_log_file_issues(logs_issues_file, issues_found):
+    with open(logs_issues_file, "a") as file:
+        for issue in issues_found:
+            file.writelines(f"ISSUE (appeared {issues_found[issue]} times):\n"
+                            f"  {issue}\n\n")
     file.close()
 
 
